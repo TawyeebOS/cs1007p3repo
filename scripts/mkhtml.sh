@@ -2,21 +2,30 @@
 
 #  A script to produce a template html file for tree in Dundee
 
+set -u
+
 title="Trees in Dundee"
 timestamp=$(date +"%x %r %Z")
 
 formatted_text=""
 
 add_element() {
-   new_text=$(cat <<- _END_
-   
-	      		<p>
-	        		$1
-	      		</p>
+	   tree_fact="Some text about this tree goes here"
+	   tree_picture="A picture of this tree"
+	   copyright="Copyright notice goes here"
+	   links="Links to the pdf file about locations of this tree in Dundee"
+	   tree_text=$(cat <<- _END_
+	   
+					<h1>$1</h1>
+					
+					$tree_fact
+					$tree_picture
+					$copyright
+					$links
 		  
-_END_
-);
-formatted_text+=$new_text
+					_END_
+					);
+					formatted_text+=$tree_text
 }
 
 # tree_names=$(cat )
