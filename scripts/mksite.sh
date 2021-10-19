@@ -1,3 +1,6 @@
 #!/bin/bash
 
-echo "This script does not do anything just now"
+echo "This script does not do much just now"
+
+
+./mkhtml.sh
