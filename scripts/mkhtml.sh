@@ -7,16 +7,31 @@ set -u
 title="Trees in Dundee"
 timestamp=$(date +"%x %r %Z")
 
-formatted_text=""
+
 
 # change the code from here
+
+list_of_files=()
+
+for file in description/*; do
+	list_of_files+=file" "
+done
+
+len=${#list_of_files[@]}
+
+for tree in $tree_list; do
+        specific_trees+=$(echo $tree | sed 's/[A-Z]/ &/g' | sed 's/ //')
+done
+
+
+
 add_element() {
-		tree_name="Some tree"
-		tree_fact="Some text about this tree goes here"
-		tree_picture_html="A picture of this tree"
-		copyright="Copyright notice goes here"
-		link="Link to the pdf file about locations of this tree in Dundee"
-		link_text="Text for the PDF link"
+		tree_name="${specific_trees[$1]}"
+		tree_fact=$(tail -n -5 list_of_files[$1])
+		tree_picture_html=$(<img src="images/${list_of_files[$1]:12:-4}.jpg" alt="A ${list_of_files[$1]:12:-4} tree" width="500" height="600">)
+		copyright=$(cat images/${list_of_files[$1]:12:-4}-copyright.txt)
+		link=$(reports/"${specific_trees[$1]}".pdf)
+		link_text='"${specific_trees[$1]}" trees in Dundee'
 		tree_text=$(cat <<- _END_
 
 			<h2>$tree_name</h2>
@@ -24,13 +39,16 @@ add_element() {
 			$tree_picture_html
 			<p>$copyright</p>
 			<p><a href="$link">$link_text</a></p>
-		  
+
 			_END_
 			);
 		formatted_text+=$tree_text
 }
 
-add_element
+
+for  (( i=0; i<$len; i++ )); do
+	add_element i
+done
 # to here
 
 cat <<- _EOF_

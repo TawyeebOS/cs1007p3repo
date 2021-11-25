@@ -5,7 +5,6 @@
 cat dundee-trees.url | xargs wget -O ./trees_public.csv 2> site/index.html
 # Reads firsts line of each file in descriptions:
 
-trees_list=()
 
 for file in descriptions/*; do
 	tree_list+=$(awk 'NR==1{print $2 $3}' $file)" " 
@@ -23,4 +22,6 @@ for tree in $tree_list; do
 done
 
 
-./mkhtml.sh
+
+export tree_list
+scripts/mkhtml.sh
