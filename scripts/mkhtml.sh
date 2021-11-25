@@ -1,3 +1,4 @@
+
 #!/bin/bash
 
 #  A script to produce a HTML content for trees in Dundee
@@ -11,27 +12,13 @@ timestamp=$(date +"%x %r %Z")
 
 # change the code from here
 
-list_of_files=()
-
-for file in description/*; do
-	list_of_files+=file" "
-done
-
-len=${#list_of_files[@]}
-
-for tree in $tree_list; do
-        specific_trees+=$(echo $tree | sed 's/[A-Z]/ &/g' | sed 's/ //')
-done
-
-
-
 add_element() {
-		tree_name="${specific_trees[$1]}"
-		tree_fact=$(tail -n -5 list_of_files[$1])
-		tree_picture_html=$(<img src="images/${list_of_files[$1]:12:-4}.jpg" alt="A ${list_of_files[$1]:12:-4} tree" width="500" height="600">)
-		copyright=$(cat images/${list_of_files[$1]:12:-4}-copyright.txt)
-		link=$(reports/"${specific_trees[$1]}".pdf)
-		link_text='"${specific_trees[$1]}" trees in Dundee'
+		tree_name=$(echo ${1:13:-4} | sed 's/_/ /')
+		tree_fact=$(tail -n -5 "$1")
+		tree_picture_html=\<img src="images/${1:13:-4}.jpg" alt="A $(echo {1:13:-4} | sed 's/_/ /' ) tree" width="500" height="600">images/sycamore.jpg
+		copyright=$(cat images/${1:13:-4}-copyright.txt)
+		link="reports/${1:13:-4}.pdf"
+		link_text=${1:13:-4}' trees in Dundee'
 		tree_text=$(cat <<- _END_
 
 			<h2>$tree_name</h2>
@@ -46,9 +33,11 @@ add_element() {
 }
 
 
-for  (( i=0; i<$len; i++ )); do
-	add_element i
+for  file in descriptions/*; do
+	add_element "$file"
 done
+
+
 # to here
 
 cat <<- _EOF_
@@ -56,7 +45,7 @@ cat <<- _EOF_
 	<head>
 		<title>$title</title>
 	</head>
-      
+
 	<body>
 		<h1>$title</h1>
 		$formatted_text
